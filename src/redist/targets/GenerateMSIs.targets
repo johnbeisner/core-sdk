@@ -180,24 +180,24 @@
           Inputs="@(SdkMsiComponent->'%(MsiInstallerFile)');
                     $(SdkComponentMsiNuspecFile);
                     $(SdkGenerateNupkgPowershellScript)"
-          Outputs="@(SdkMsiComponent->'$(ArtifactsNonShippingPackagesDir)%(ComponentId).$(Architecture).%(ComponentVersion).nupkg')">
+          Outputs="@(SdkMsiComponent->'$(ArtifactsNonShippingPackagesDir)%(ComponentId).$(Architecture).%(PVer).%(ComponentVersion).nupkg')">
 
     <Exec Command="powershell -NoProfile -NoLogo $(SdkGenerateNupkgPowershellScript) ^
                       '%(SdkMsiComponent.MsiInstallerFile)' ^
                       '@(SdkMsiComponent->'%(ComponentVersion)')' ^
                       '$(SdkMsiComponentNuspecFile)' ^
-                      '@(SdkMsiComponent->'$(ArtifactsNonShippingPackagesDir)%(ComponentId).$(Architecture).%(ComponentVersion).nupkg')' ^
+                      '@(SdkMsiComponent->'$(ArtifactsNonShippingPackagesDir)%(ComponentId).$(Architecture).%(PVer).%(ComponentVersion).nupkg')' ^
                       '$(Architecture)' ^
-                      '@(SdkMsiComponent->'%(ComponentId)')'" />
+                      '@(SdkMsiComponent->'%(ComponentId)')' ^
+                      '@(SdkMsiComponent->'%(PVer)')'" />
   </Target>
 
   <Target Name="SetupSdkMsiComponentNupkg"
-          DependsOnTargets="GenerateLayout;GenerateSdkMsi"
+          DependsOnTargets="GenerateLayout"
           Condition=" '$(OS)' == 'Windows_NT'">
 
     <PropertyGroup>
       <SdkMsiComponentNuspecFile>$(MSBuildThisFileDirectory)packaging/windows/clisdk/VS.Redist.Common.SDK.Component.nuspec</SdkMsiComponentNuspecFile>
-      <AspNetSharedFrameworkComponentId>VS.Redist.Common.AspNet.Core.SharedFramework</AspNetSharedFrameworkComponentId>
       <AspNetTargetingPackComponentId>VS.Redist.Common.AspNet.Core.TargetingPack</AspNetTargetingPackComponentId>
       <HostFxrComponentId>VS.Redist.Common.Net.Core.HostFX.Resolver</HostFxrComponentId>
       <AppHostPackComponentId>VS.Redist.Common.Net.Core.AppHostPack</AppHostPackComponentId>
@@ -205,76 +205,72 @@
       <SharedHostComponentId>VS.Redist.Common.Net.Core.SharedHost</SharedHostComponentId>
       <NetStandardTargetingPackComponentId>VS.Redist.Common.Net.Standard.TargetingPack</NetStandardTargetingPackComponentId>
       <NetCoreTargetingPackComponentId>VS.Redist.Common.Net.Core.TargetingPack</NetCoreTargetingPackComponentId>
-      <ToolsetComponentId>VS.Redist.Common.Net.Core.Toolset</ToolsetComponentId>
       <WindowsDesktopComponentId>VS.Redist.Common.Net.Core.WindowsDesktop.SharedFramework</WindowsDesktopComponentId>
       <WindowsDesktopTargetingPackComponentId>VS.Redist.Common.Net.Core.WindowsDesktop.TargetingPack</WindowsDesktopTargetingPackComponentId>
     </PropertyGroup>
 
     <ItemGroup>
-      <SdkMsiComponent Include="ToolsetMsiNupkg">
-        <MsiInstallerFile>$(SdkMSIInstallerFile)</MsiInstallerFile>
-        <ComponentId>$(ToolsetComponentId)</ComponentId>
-        <ComponentVersion>$(FullNugetVersion)</ComponentVersion>
-      </SdkMsiComponent>
-
-      <SdkMsiComponent Include="AspNetSharedFrameworkMsiNupkg">
-        <MsiInstallerFile>$(DownloadsFolder)$(DownloadedAspNetCoreSharedFxForNugetInstallerFileName)</MsiInstallerFile>
-        <ComponentId>$(AspNetSharedFrameworkComponentId)</ComponentId>
-        <ComponentVersion>$(AspNetCoreVersion)</ComponentVersion>
-      </SdkMsiComponent>
-
       <SdkMsiComponent Include="AspNetTargetingPackMsiNupkg">
         <MsiInstallerFile>$(DownloadsFolder)$(DownloadedAspNetTargetingPackInstallerFileName)</MsiInstallerFile>
         <ComponentId>$(AspNetTargetingPackComponentId)</ComponentId>
         <ComponentVersion>$(AspNetTargetingPackVersion)</ComponentVersion>
+        <PVer>3.0</PVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="HostFxrMsiNupkg">
         <MsiInstallerFile>$(DownloadsFolder)$(DownloadedHostFxrInstallerFileName)</MsiInstallerFile>
         <ComponentId>$(HostFxrComponentId)</ComponentId>
         <ComponentVersion>$(HostFxrVersion)</ComponentVersion>
+        <PVer>3.0</PVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="AppHostPackMsiNupkg">
         <MsiInstallerFile>$(DownloadsFolder)$(DownloadedNetCoreAppHostPackInstallerFileName)</MsiInstallerFile>
         <ComponentId>$(AppHostPackComponentId)</ComponentId>
         <ComponentVersion>$(MicrosoftNETCoreAppPackageVersion)</ComponentVersion>
+        <PVer>3.0</PVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="SharedFrameworkMsiNupkg">
         <MsiInstallerFile>$(DownloadsFolder)$(DownloadedSharedFrameworkInstallerFileName)</MsiInstallerFile>
         <ComponentId>$(SharedFrameworkComponentId)</ComponentId>
         <ComponentVersion>$(MicrosoftNETCoreAppPackageVersion)</ComponentVersion>
+        <PVer>3.0</PVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="SharedHostMsiNupkg">
         <MsiInstallerFile>$(DownloadsFolder)$(DownloadedSharedHostInstallerFileName)</MsiInstallerFile>
         <ComponentId>$(SharedHostComponentId)</ComponentId>
         <ComponentVersion>$(SharedHostVersion)</ComponentVersion>
+        <PVer>3.0</PVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="NetStandardTargetingPackMsiNupkg">
         <MsiInstallerFile>$(DownloadsFolder)$(DownloadedNetStandardTargetingPackInstallerFileName)</MsiInstallerFile>
         <ComponentId>$(NetStandardTargetingPackComponentId)</ComponentId>
         <ComponentVersion>$(NETStandardLibraryRefPackageVersion)</ComponentVersion>
+        <PVer>2.1</PVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="NetCoreTargetingPackMsiNupkg">
         <MsiInstallerFile>$(DownloadsFolder)$(DownloadedNetCoreAppTargetingPackInstallerFileName)</MsiInstallerFile>
         <ComponentId>$(NetCoreTargetingPackComponentId)</ComponentId>
         <ComponentVersion>$(NetCoreAppTargetingPackVersion)</ComponentVersion>
+        <PVer>3.0</PVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="WindowsDesktopMsiNupkg">
         <MsiInstallerFile>$(DownloadsFolder)$(DownloadedWinFormsAndWpfSharedFrameworkInstallerFileName)</MsiInstallerFile>
         <ComponentId>$(WindowsDesktopComponentId)</ComponentId>
         <ComponentVersion>$(MicrosoftWindowsDesktopPackageVersion)</ComponentVersion>
+        <PVer>3.0</PVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="WindowsDesktopTargetingPackMsiNupkg">
         <MsiInstallerFile>$(DownloadsFolder)$(DownloadedWindowsDesktopTargetingPackInstallerFileName)</MsiInstallerFile>
         <ComponentId>$(WindowsDesktopTargetingPackComponentId)</ComponentId>
         <ComponentVersion>$(WindowsDesktopTargetingPackVersion)</ComponentVersion>
+        <PVer>3.0</PVer>
       </SdkMsiComponent>
     </ItemGroup>
   </Target>
@@ -293,6 +289,42 @@
                       '$(VSToolsNuspecFile)' ^
                       '$(VSToolsNupkgFile)' ^
                       '$(Architecture)'" />
+  </Target>
+  
+  <Target Name="GenerateAspNetSharedFrameworkMsiNupkg"
+          DependsOnTargets="GenerateLayout"
+          Condition=" '$(OS)' == 'Windows_NT' "
+          Inputs="$(DownloadsFolder)AspNet/$(Architecture)/**/*;
+                    $(MSBuildThisFileDirectory)/packaging/windows/clisdk/VS.Redist.Common.SDK.Component.WithCAB.nuspec;
+                    $(SdkGenerateNupkgPowershellScript)"
+          Outputs="$(ArtifactsNonShippingPackagesDir)VS.Redist.Common.AspNet.Core.SharedFramework.$(Architecture).3.0.$(AspNetCoreVersion).nupkg">
+
+    <Exec Command="powershell -NoProfile -NoLogo $(SdkGenerateNupkgPowershellScript) ^
+                      '$(DownloadsFolder)AspNet/$(Architecture)' ^
+                      '$(AspNetCoreVersion)' ^
+                      '$(MSBuildThisFileDirectory)/packaging/windows/clisdk/VS.Redist.Common.SDK.Component.WithCAB.nuspec' ^
+                      '$(ArtifactsNonShippingPackagesDir)VS.Redist.Common.AspNet.Core.SharedFramework.$(Architecture).3.0.$(AspNetCoreVersion).nupkg' ^
+                      '$(Architecture)' ^
+                      'VS.Redist.Common.AspNet.Core.SharedFramework' ^
+                      '3.0'" />
+  </Target>
+
+  <Target Name="GenerateToolsetMsiNupkg"
+          DependsOnTargets="GenerateLayout;GenerateSdkMsi"
+          Condition=" '$(OS)' == 'Windows_NT' "
+          Inputs="$(DownloadsFolder)Toolset/$(Architecture)/**/*;
+                    $(MSBuildThisFileDirectory)/packaging/windows/clisdk/VS.Redist.Common.SDK.Component.WithCAB.nuspec;
+                    $(SdkGenerateNupkgPowershellScript)"
+          Outputs="$(ArtifactsNonShippingPackagesDir)VS.Redist.Common.Net.Core.Toolset.$(Architecture).3.0.$(FullNugetVersion).nupkg">
+
+    <Exec Command="powershell -NoProfile -NoLogo $(SdkGenerateNupkgPowershellScript) ^
+                      '$(DownloadsFolder)Toolset/$(Architecture)' ^
+                      '$(FullNugetVersion)' ^
+                      '$(MSBuildThisFileDirectory)/packaging/windows/clisdk/VS.Redist.Common.SDK.Component.WithCAB.nuspec' ^
+                      '$(ArtifactsNonShippingPackagesDir)VS.Redist.Common.Net.Core.Toolset.$(Architecture).3.0.$(FullNugetVersion).nupkg' ^
+                      '$(Architecture)' ^
+                      'VS.Redist.Common.Net.Core.Toolset' ^
+                      '3.0'" />
   </Target>
 
   <Target Name="GenerateVSToolsResolverNupkg"
@@ -345,7 +377,9 @@
                             GenerateVSToolsNupkg;
                             GenerateVSToolsResolverNupkg;
                             GenerateSdkMSBuildExtensionsNupkg;
-                            GenerateSdkMsiComponentNupkg"
+                            GenerateSdkMsiComponentNupkg;
+                            GenerateAspNetSharedFrameworkMsiNupkg;
+                            GenerateToolsetMsiNupkg"
         Condition=" '$(OS)' == 'Windows_NT' and !$(Architecture.StartsWith('arm'))" />
 
 
