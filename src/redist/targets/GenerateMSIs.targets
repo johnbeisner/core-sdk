@@ -180,13 +180,13 @@
           Inputs="@(SdkMsiComponent->'%(MsiInstallerFile)');
                     $(SdkComponentMsiNuspecFile);
                     $(SdkGenerateNupkgPowershellScript)"
-          Outputs="@(SdkMsiComponent->'$(ArtifactsNonShippingPackagesDir)%(ComponentId).$(Architecture).%(PVer).%(ComponentVersion).nupkg')">
+          Outputs="@(SdkMsiComponent->'$(ArtifactsNonShippingPackagesDir)%(ComponentId).$(Architecture).%(PVer).nupkg')">
 
     <Exec Command="powershell -NoProfile -NoLogo $(SdkGenerateNupkgPowershellScript) ^
                       '%(SdkMsiComponent.MsiInstallerFile)' ^
                       '@(SdkMsiComponent->'%(ComponentVersion)')' ^
                       '$(SdkMsiComponentNuspecFile)' ^
-                      '@(SdkMsiComponent->'$(ArtifactsNonShippingPackagesDir)%(ComponentId).$(Architecture).%(PVer).%(ComponentVersion).nupkg')' ^
+                      '@(SdkMsiComponent->'$(ArtifactsNonShippingPackagesDir)%(ComponentId).$(Architecture).%(PVer).nupkg')' ^
                       '$(Architecture)' ^
                       '@(SdkMsiComponent->'%(ComponentId)')' ^
                       '@(SdkMsiComponent->'%(PVer)')'" />
@@ -297,13 +297,13 @@
           Inputs="$(DownloadsFolder)AspNet/$(Architecture)/**/*;
                     $(MSBuildThisFileDirectory)/packaging/windows/clisdk/VS.Redist.Common.SDK.Component.WithCAB.nuspec;
                     $(SdkGenerateNupkgPowershellScript)"
-          Outputs="$(ArtifactsNonShippingPackagesDir)VS.Redist.Common.AspNet.Core.SharedFramework.$(Architecture).3.0.$(AspNetCoreVersion).nupkg">
+          Outputs="$(ArtifactsNonShippingPackagesDir)VS.Redist.Common.AspNet.Core.SharedFramework.$(Architecture).3.0.nupkg">
 
     <Exec Command="powershell -NoProfile -NoLogo $(SdkGenerateNupkgPowershellScript) ^
                       '$(DownloadsFolder)AspNet/$(Architecture)' ^
                       '$(AspNetCoreVersion)' ^
                       '$(MSBuildThisFileDirectory)/packaging/windows/clisdk/VS.Redist.Common.SDK.Component.WithCAB.nuspec' ^
-                      '$(ArtifactsNonShippingPackagesDir)VS.Redist.Common.AspNet.Core.SharedFramework.$(Architecture).3.0.$(AspNetCoreVersion).nupkg' ^
+                      '$(ArtifactsNonShippingPackagesDir)VS.Redist.Common.AspNet.Core.SharedFramework.$(Architecture).3.0.nupkg' ^
                       '$(Architecture)' ^
                       'VS.Redist.Common.AspNet.Core.SharedFramework' ^
                       '3.0'" />
@@ -315,13 +315,13 @@
           Inputs="$(DownloadsFolder)Toolset/$(Architecture)/**/*;
                     $(MSBuildThisFileDirectory)/packaging/windows/clisdk/VS.Redist.Common.SDK.Component.WithCAB.nuspec;
                     $(SdkGenerateNupkgPowershellScript)"
-          Outputs="$(ArtifactsNonShippingPackagesDir)VS.Redist.Common.Net.Core.Toolset.$(Architecture).3.0.$(FullNugetVersion).nupkg">
+          Outputs="$(ArtifactsNonShippingPackagesDir)VS.Redist.Common.Net.Core.Toolset.$(Architecture).3.0.nupkg">
 
     <Exec Command="powershell -NoProfile -NoLogo $(SdkGenerateNupkgPowershellScript) ^
                       '$(DownloadsFolder)Toolset/$(Architecture)' ^
                       '$(FullNugetVersion)' ^
                       '$(MSBuildThisFileDirectory)/packaging/windows/clisdk/VS.Redist.Common.SDK.Component.WithCAB.nuspec' ^
-                      '$(ArtifactsNonShippingPackagesDir)VS.Redist.Common.Net.Core.Toolset.$(Architecture).3.0.$(FullNugetVersion).nupkg' ^
+                      '$(ArtifactsNonShippingPackagesDir)VS.Redist.Common.Net.Core.Toolset.$(Architecture).3.0.nupkg' ^
                       '$(Architecture)' ^
                       'VS.Redist.Common.Net.Core.Toolset' ^
                       '3.0'" />
