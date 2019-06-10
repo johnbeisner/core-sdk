@@ -170,44 +170,223 @@
                       '$(CombinedFrameworkSdkHostMSIInstallerFile)' ^
                       '$(FullNugetVersion)' ^
                       '$(SdkInstallerNuspecFile)' ^
-                      '$(SdkInstallerNupkgFile)'" />
+                      '$(SdkInstallerNupkgFile)' ^
+                      '$(Architecture)'" />
+  </Target>
+
+  <Target Name="GenerateSdkMsiComponentNupkg"
+          DependsOnTargets="SetupSdkMsiComponentNupkg"
+          Condition=" '$(OS)' == 'Windows_NT'"
+          Inputs="@(SdkMsiComponent->'%(MsiInstallerFile)');
+                    @(SdkMsiComponent->'%(NuSpecFile)');
+                    $(SdkGenerateNupkgPowershellScript)"
+          Outputs="@(SdkMsiComponent->'$(ArtifactsNonShippingPackagesDir)%(ComponentId).$(Architecture).%(ComponentVersion).nupkg')">
+
+    <Exec Command="powershell -NoProfile -NoLogo $(SdkGenerateNupkgPowershellScript) ^
+                      '%(SdkMsiComponent.MsiInstallerFile)' ^
+                      '@(SdkMsiComponent->'%(ComponentVersion)')' ^
+                      '@(SdkMsiComponent->'%(NuSpecFile)')' ^
+                      '@(SdkMsiComponent->'$(ArtifactsNonShippingPackagesDir)%(ComponentId).$(Architecture).%(ComponentVersion).nupkg')' ^
+                      '$(Architecture)' ^
+                      '@(SdkMsiComponent->'%(ComponentId)')' ^
+                      '@(SdkMsiComponent->'%(ComponentFriendlyName)')' ^
+                      '@(SdkMsiComponent->'%(ProjectUrlSuffix)')'" />
+  </Target>
+
+  <Target Name="SetupSdkMsiComponentNupkg"
+          DependsOnTargets="GenerateLayout"
+          Condition=" '$(OS)' == 'Windows_NT'">
+
+    <PropertyGroup>
+      <NuSpecFile>$(MSBuildThisFileDirectory)packaging/windows/clisdk/VS.Redist.Common.Component.nuspec</NuSpecFile>
+      <CabNuSpecFile>$(MSBuildThisFileDirectory)packaging/windows/clisdk/VS.Redist.Common.Component.WithCAB.nuspec</CabNuSpecFile>
+      <AspNetTargetingPackComponentId>VS.Redist.Common.AspNet.Core.TargetingPack</AspNetTargetingPackComponentId>
+      <HostFxrComponentId>VS.Redist.Common.Net.Core.HostFXR</HostFxrComponentId>
+      <AppHostPackComponentId>VS.Redist.Common.Net.Core.AppHostPack</AppHostPackComponentId>
+      <SharedFrameworkComponentId>VS.Redist.Common.Net.Core.SharedFramework</SharedFrameworkComponentId>
+      <SharedHostComponentId>VS.Redist.Common.Net.Core.SharedHost</SharedHostComponentId>
+      <NetStandardTargetingPackComponentId>VS.Redist.Common.Net.Standard.TargetingPack</NetStandardTargetingPackComponentId>
+      <NetCoreTargetingPackComponentId>VS.Redist.Common.Net.Core.TargetingPack</NetCoreTargetingPackComponentId>
+      <WindowsDesktopComponentId>VS.Redist.Common.WindowsDesktop.SharedFramework</WindowsDesktopComponentId>
+      <WindowsDesktopTargetingPackComponentId>VS.Redist.Common.WindowsDesktop.TargetingPack</WindowsDesktopTargetingPackComponentId>
+      <AspNetSharedFrameworkComponentId>VS.Redist.Common.AspNet.Core.SharedFramework</AspNetSharedFrameworkComponentId>
+      <ToolsetComponentId>VS.Redist.Common.Net.Core.Toolset</ToolsetComponentId>
+    
+  </PropertyGroup>
+
+    <ItemGroup>
+      <SdkMsiComponent Include="AspNetTargetingPackMsiNupkg">
+        <MsiInstallerFile>$(DownloadsFolder)$(DownloadedAspNetTargetingPackInstallerFileName)</MsiInstallerFile>
+        <NuSpecFile>$(NuSpecFile)</NuSpecFile>
+        <ComponentId>$(AspNetTargetingPackComponentId)</ComponentId>
+        <ComponentVersion>$(AspNetTargetingPackVersion)</ComponentVersion>
+        <ProjectUrlSuffix>aspnet/aspnetcore</ProjectUrlSuffix>
+        <ComponentFriendlyName>Asp.NET TargetingPack</ComponentFriendlyName>
+      </SdkMsiComponent>
+
+      <SdkMsiComponent Include="HostFxrMsiNupkg">
+        <MsiInstallerFile>$(DownloadsFolder)$(DownloadedHostFxrInstallerFileName)</MsiInstallerFile>
+        <NuSpecFile>$(NuSpecFile)</NuSpecFile>
+        <ComponentId>$(HostFxrComponentId)</ComponentId>
+        <ComponentVersion>$(HostFxrVersion)</ComponentVersion>
+        <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
+        <ComponentFriendlyName>.NET Core HostFX Resolver</ComponentFriendlyName>
+      </SdkMsiComponent>
+
+      <SdkMsiComponent Include="AppHostPackMsiNupkg">
+        <MsiInstallerFile>$(DownloadsFolder)$(DownloadedNetCoreAppHostPackInstallerFileName)</MsiInstallerFile>
+        <NuSpecFile>$(NuSpecFile)</NuSpecFile>
+        <ComponentId>$(AppHostPackComponentId)</ComponentId>
+        <ComponentVersion>$(MicrosoftNETCoreAppPackageVersion)</ComponentVersion>
+        <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
+        <ComponentFriendlyName>.NET Core AppHost Pack</ComponentFriendlyName>
+      </SdkMsiComponent>
+
+      <SdkMsiComponent Include="SharedFrameworkMsiNupkg">
+        <MsiInstallerFile>$(DownloadsFolder)$(DownloadedSharedFrameworkInstallerFileName)</MsiInstallerFile>
+        <NuSpecFile>$(NuSpecFile)</NuSpecFile>
+        <ComponentId>$(SharedFrameworkComponentId)</ComponentId>
+        <ComponentVersion>$(MicrosoftNETCoreAppPackageVersion)</ComponentVersion>
+        <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
+        <ComponentFriendlyName>.NET Core SharedFramework</ComponentFriendlyName>
+      </SdkMsiComponent>
+
+      <SdkMsiComponent Include="2.1SharedFrameworkMsiNupkg">
+        <MsiInstallerFile>$(ArtifactsDir)extracted/SF/2.1/$(Architecture)/dotnet-runtime-2.1.11-win-$(Architecture).msi</MsiInstallerFile>
+        <NuSpecFile>$(NuSpecFile)</NuSpecFile>
+        <ComponentId>$(SharedFrameworkComponentId)</ComponentId>
+        <ComponentVersion>2.1.11</ComponentVersion>
+        <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
+        <ComponentFriendlyName>.NET Core SharedFramework</ComponentFriendlyName>
+      </SdkMsiComponent>
+
+      <SdkMsiComponent Include="2.2SharedFrameworkMsiNupkg">
+        <MsiInstallerFile>$(ArtifactsDir)extracted/SF/2.2/$(Architecture)/dotnet-runtime-2.2.5-win-$(Architecture).msi</MsiInstallerFile>
+        <NuSpecFile>$(NuSpecFile)</NuSpecFile>
+        <ComponentId>$(SharedFrameworkComponentId)</ComponentId>
+        <ComponentVersion>2.2.5</ComponentVersion>
+        <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
+        <ComponentFriendlyName>.NET Core SharedFramework</ComponentFriendlyName>
+      </SdkMsiComponent>
+      
+      <SdkMsiComponent Include="SharedHostMsiNupkg">
+        <MsiInstallerFile>$(DownloadsFolder)$(DownloadedSharedHostInstallerFileName)</MsiInstallerFile>
+        <NuSpecFile>$(NuSpecFile)</NuSpecFile>
+        <ComponentId>$(SharedHostComponentId)</ComponentId>
+        <ComponentVersion>$(SharedHostVersion)</ComponentVersion>
+        <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
+        <ComponentFriendlyName>.NET Core SharedHost</ComponentFriendlyName>
+      </SdkMsiComponent>
+
+      <SdkMsiComponent Include="NetStandardTargetingPackMsiNupkg">
+        <MsiInstallerFile>$(DownloadsFolder)$(DownloadedNetStandardTargetingPackInstallerFileName)</MsiInstallerFile>
+        <NuSpecFile>$(NuSpecFile)</NuSpecFile>
+        <ComponentId>$(NetStandardTargetingPackComponentId)</ComponentId>
+        <ComponentVersion>$(NETStandardLibraryRefPackageVersion)</ComponentVersion>
+        <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
+        <ComponentFriendlyName>.NET Standard TargetingPack</ComponentFriendlyName>
+      </SdkMsiComponent>
+
+      <SdkMsiComponent Include="NetCoreTargetingPackMsiNupkg">
+        <MsiInstallerFile>$(DownloadsFolder)$(DownloadedNetCoreAppTargetingPackInstallerFileName)</MsiInstallerFile>
+        <NuSpecFile>$(NuSpecFile)</NuSpecFile>
+        <ComponentId>$(NetCoreTargetingPackComponentId)</ComponentId>
+        <ComponentVersion>$(NetCoreAppTargetingPackVersion)</ComponentVersion>
+        <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
+        <ComponentFriendlyName>.NET Core TargetingPack</ComponentFriendlyName>
+      </SdkMsiComponent>
+
+      <SdkMsiComponent Include="WindowsDesktopMsiNupkg">
+        <MsiInstallerFile>$(DownloadsFolder)$(DownloadedWinFormsAndWpfSharedFrameworkInstallerFileName)</MsiInstallerFile>
+        <NuSpecFile>$(NuSpecFile)</NuSpecFile>
+        <ComponentId>$(WindowsDesktopComponentId)</ComponentId>
+        <ComponentVersion>$(MicrosoftWindowsDesktopPackageVersion)</ComponentVersion>
+        <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
+        <ComponentFriendlyName>Windows Desktop</ComponentFriendlyName>
+      </SdkMsiComponent>
+
+      <SdkMsiComponent Include="WindowsDesktopTargetingPackMsiNupkg">
+        <MsiInstallerFile>$(DownloadsFolder)$(DownloadedWindowsDesktopTargetingPackInstallerFileName)</MsiInstallerFile>
+        <NuSpecFile>$(NuSpecFile)</NuSpecFile>
+        <ComponentId>$(WindowsDesktopTargetingPackComponentId)</ComponentId>
+        <ComponentVersion>$(WindowsDesktopTargetingPackVersion)</ComponentVersion>
+        <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
+        <ComponentFriendlyName>Windows Desktop TargetingPack</ComponentFriendlyName>
+      </SdkMsiComponent>
+
+      <SdkMsiComponent Include="AspNetSharedFrameworkMsiNupkg">
+        <MsiInstallerFile>$(ArtifactsDir)extracted/AN/3.0/$(Architecture)</MsiInstallerFile>
+        <NuSpecFile>$(CabNuSpecFile)</NuSpecFile>
+        <ComponentId>$(AspNetSharedFrameworkComponentId)</ComponentId>
+        <ComponentVersion>$(AspNetCoreVersion)</ComponentVersion>
+        <ProjectUrlSuffix>aspnet/aspnetcore</ProjectUrlSuffix>
+        <ComponentFriendlyName>Asp.NET SharedFramework</ComponentFriendlyName>
+      </SdkMsiComponent>
+
+      <SdkMsiComponent Include="2.1AspNetSharedFrameworkMsiNupkg">
+        <MsiInstallerFile>$(ArtifactsDir)extracted/AN/2.1/$(Architecture)</MsiInstallerFile>
+        <NuSpecFile>$(CabNuSpecFile)</NuSpecFile>
+        <ComponentId>$(AspNetSharedFrameworkComponentId)</ComponentId>
+        <ComponentVersion>2.1.11</ComponentVersion>
+        <ProjectUrlSuffix>aspnet/aspnetcore</ProjectUrlSuffix>
+        <ComponentFriendlyName>Asp.NET SharedFramework</ComponentFriendlyName>
+      </SdkMsiComponent>
+
+      <SdkMsiComponent Include="2.2AspNetSharedFrameworkMsiNupkg">
+        <MsiInstallerFile>$(ArtifactsDir)extracted/AN/2.2/$(Architecture)</MsiInstallerFile>
+        <NuSpecFile>$(CabNuSpecFile)</NuSpecFile>
+        <ComponentId>$(AspNetSharedFrameworkComponentId)</ComponentId>
+        <ComponentVersion>2.2.5</ComponentVersion>
+        <ProjectUrlSuffix>aspnet/aspnetcore</ProjectUrlSuffix>
+        <ComponentFriendlyName>Asp.NET SharedFramework</ComponentFriendlyName>
+      </SdkMsiComponent>
+      
+      <SdkMsiComponent Include="ToolsetMsiNupkg">
+        <MsiInstallerFile>$(ArtifactsDir)extracted/TS/3.0/$(Architecture)</MsiInstallerFile>
+        <NuSpecFile>$(CabNuSpecFile)</NuSpecFile>
+        <ComponentId>$(ToolsetComponentId)</ComponentId>
+        <ComponentVersion>3.0.100-preview7-012323</ComponentVersion>
+        <ProjectUrlSuffix>dotnet/core-sdk</ProjectUrlSuffix>
+        <ComponentFriendlyName>.NET Core SDK Toolset</ComponentFriendlyName>
+      </SdkMsiComponent>
+    </ItemGroup>
   </Target>
 
   <Target Name="GenerateVSToolsNupkg"
-          DependsOnTargets="GenerateLayout;MsiTargetsSetupInputOutputs;GenerateSdkBundle"
+          DependsOnTargets="GenerateLayout"
           Condition=" '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x86'"
           Inputs="$(RedistLayoutPath)/**/*;
-                  $(VSToolsNuspecFile);
-                  $(SdkGenerateNupkgPowershellScript)"
+                    $(VSToolsNuspecFile);
+                    $(SdkGenerateNupkgPowershellScript)"
           Outputs="$(VSToolsNupkgFile)">
 
     <Exec Command="powershell -NoProfile -NoLogo $(SdkGenerateNupkgPowershellScript) ^
-                    '$(RedistLayoutPath.TrimEnd('\'))' ^
-                    '$(FullNugetVersion)' ^
-                    '$(VSToolsNuspecFile)' ^
-                    '$(VSToolsNupkgFile)'" />
+                      '$(RedistLayoutPath.TrimEnd('\'))' ^
+                      '$(FullNugetVersion)' ^
+                      '$(VSToolsNuspecFile)' ^
+                      '$(VSToolsNupkgFile)'" />
   </Target>
-
+ 
   <Target Name="GenerateVSToolsResolverNupkg"
-          DependsOnTargets="GenerateLayout;MsiTargetsSetupInputOutputs;GenerateSdkBundle"
+          DependsOnTargets="GenerateLayout"
           Condition=" '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x86'"
           Inputs="$(SdkResolverLayoutPath)/**/*;
-                  $(VSToolsResolverNuspecFile);
-                  $(SdkGenerateNupkgPowershellScript)"
+                    $(VSToolsResolverNuspecFile);
+                    $(SdkGenerateNupkgPowershellScript)"
           Outputs="$(VSToolsResolverNupkgFile)">
 
     <Exec Command="powershell -NoProfile -NoLogo $(SdkGenerateNupkgPowershellScript) ^
-                    '$(SdkResolverLayoutPath.TrimEnd('\'))' ^
-                    '$(FullNugetVersion)' ^
-                    '$(VSToolsResolverNuspecFile)' ^
-                    '$(VSToolsResolverNupkgFile)'" />
+                      '$(SdkResolverLayoutPath.TrimEnd('\'))' ^
+                      '$(FullNugetVersion)' ^
+                      '$(VSToolsResolverNuspecFile)' ^
+                      '$(VSToolsResolverNupkgFile)'" />
   </Target>
 
   <Target Name="GenerateSdkMSBuildExtensionsNupkg"
-          DependsOnTargets="GenerateLayout;MsiTargetsSetupInputOutputs;GenerateSdkBundle"
+          DependsOnTargets="GenerateLayout"
           Condition=" '$(OS)' == 'Windows_NT' And '$(Architecture)' == 'x64' "
           Inputs="$(MSBuildExtensionsLayoutDirectory)/**/*;
-                    $(SdkInstallerNuspecFile);
+                    $(SdkMSBuildExtensionsNuspecFile);
                     $(SdkGenerateNupkgPowershellScript)"
           Outputs="$(SdkMSBuildExtensionsNupkgFile);$(SdkMSBuildExtensionsSwrFile)">
 
@@ -215,10 +394,10 @@
          https://github.com/dotnet/cli/issues/10260 -->
 
     <!-- <Exec Command="powershell -NoProfile -NoLogo -InformationAction Continue $(SdkGenerateNupkgPowershellScript) ^
-                      '$(MSBuildExtensionsLayoutDirectory)' ^
-                      '$(FullNugetVersion)' ^
-                      '$(SdkMSBuildExtensionsNuspecFile)' ^
-                      '$(SdkMSBuildExtensionsNupkgFile)'" />
+                           '$(MSBuildExtensionsLayoutDirectory)' ^
+                           '$(FullNugetVersion)' ^
+                           '$(SdkMSBuildExtensionsNuspecFile)' ^
+                           '$(SdkMSBuildExtensionsNupkgFile)'" />
       
       <GenerateMSBuildExtensionsSWR MSBuildExtensionsLayoutDirectory="$(MSBuildExtensionsLayoutDirectory)"
                                     OutputFile="$(SdkMSBuildExtensionsSwrFile)"/> -->
@@ -236,7 +415,8 @@
                             GenerateSdkNupkg;
                             GenerateVSToolsNupkg;
                             GenerateVSToolsResolverNupkg;
-                            GenerateSdkMSBuildExtensionsNupkg"
+                            GenerateSdkMSBuildExtensionsNupkg;
+                            GenerateSdkMsiComponentNupkg"
         Condition=" '$(OS)' == 'Windows_NT' and !$(Architecture.StartsWith('arm'))" />
 
 
