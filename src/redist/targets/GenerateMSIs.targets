@@ -190,7 +190,8 @@
                       '$(Architecture)' ^
                       '@(SdkMsiComponent->'%(ComponentId)')' ^
                       '@(SdkMsiComponent->'%(ComponentFriendlyName)')' ^
-                      '@(SdkMsiComponent->'%(ProjectUrlSuffix)')'" />
+                      '@(SdkMsiComponent->'%(ProjectUrlSuffix)')' ^
+                      '@(SdkMsiComponent->'%(MmVer)')'" />
   </Target>
 
   <Target Name="SetupSdkMsiComponentNupkg"
@@ -200,17 +201,17 @@
     <PropertyGroup>
       <NuSpecFile>$(MSBuildThisFileDirectory)packaging/windows/clisdk/VS.Redist.Common.Component.nuspec</NuSpecFile>
       <CabNuSpecFile>$(MSBuildThisFileDirectory)packaging/windows/clisdk/VS.Redist.Common.Component.WithCAB.nuspec</CabNuSpecFile>
-      <AspNetTargetingPackComponentId>VS.Redist.Common.AspNet.Core.TargetingPack</AspNetTargetingPackComponentId>
-      <HostFxrComponentId>VS.Redist.Common.Net.Core.HostFXR</HostFxrComponentId>
-      <AppHostPackComponentId>VS.Redist.Common.Net.Core.AppHostPack</AppHostPackComponentId>
-      <SharedFrameworkComponentId>VS.Redist.Common.Net.Core.SharedFramework</SharedFrameworkComponentId>
-      <SharedHostComponentId>VS.Redist.Common.Net.Core.SharedHost</SharedHostComponentId>
-      <NetStandardTargetingPackComponentId>VS.Redist.Common.Net.Standard.TargetingPack</NetStandardTargetingPackComponentId>
-      <NetCoreTargetingPackComponentId>VS.Redist.Common.Net.Core.TargetingPack</NetCoreTargetingPackComponentId>
+      <AspNetTargetingPackComponentId>VS.Redist.Common.AspNetCore.TargetingPack</AspNetTargetingPackComponentId>
+      <HostFxrComponentId>VS.Redist.Common.NetCore.HostFXR</HostFxrComponentId>
+      <AppHostPackComponentId>VS.Redist.Common.NetCore.AppHostPack</AppHostPackComponentId>
+      <SharedFrameworkComponentId>VS.Redist.Common.NetCore.SharedFramework</SharedFrameworkComponentId>
+      <SharedHostComponentId>VS.Redist.Common.NetCore.SharedHost</SharedHostComponentId>
+      <NetStandardTargetingPackComponentId>VS.Redist.Common.NetStandard.TargetingPack</NetStandardTargetingPackComponentId>
+      <NetCoreTargetingPackComponentId>VS.Redist.Common.NetCore.TargetingPack</NetCoreTargetingPackComponentId>
       <WindowsDesktopComponentId>VS.Redist.Common.WindowsDesktop.SharedFramework</WindowsDesktopComponentId>
       <WindowsDesktopTargetingPackComponentId>VS.Redist.Common.WindowsDesktop.TargetingPack</WindowsDesktopTargetingPackComponentId>
-      <AspNetSharedFrameworkComponentId>VS.Redist.Common.AspNet.Core.SharedFramework</AspNetSharedFrameworkComponentId>
-      <ToolsetComponentId>VS.Redist.Common.Net.Core.Toolset</ToolsetComponentId>
+      <AspNetSharedFrameworkComponentId>VS.Redist.Common.AspNetCore.SharedFramework</AspNetSharedFrameworkComponentId>
+      <ToolsetComponentId>VS.Redist.Common.NetCore.Toolset</ToolsetComponentId>
     
   </PropertyGroup>
 
@@ -222,6 +223,7 @@
         <ComponentVersion>$(AspNetTargetingPackVersion)</ComponentVersion>
         <ProjectUrlSuffix>aspnet/aspnetcore</ProjectUrlSuffix>
         <ComponentFriendlyName>Asp.NET TargetingPack</ComponentFriendlyName>
+        <MmVer>3.0</MmVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="HostFxrMsiNupkg">
@@ -231,6 +233,7 @@
         <ComponentVersion>$(HostFxrVersion)</ComponentVersion>
         <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
         <ComponentFriendlyName>.NET Core HostFX Resolver</ComponentFriendlyName>
+        <MmVer>3.0</MmVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="AppHostPackMsiNupkg">
@@ -240,6 +243,7 @@
         <ComponentVersion>$(MicrosoftNETCoreAppPackageVersion)</ComponentVersion>
         <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
         <ComponentFriendlyName>.NET Core AppHost Pack</ComponentFriendlyName>
+        <MmVer>3.0</MmVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="SharedFrameworkMsiNupkg">
@@ -249,6 +253,7 @@
         <ComponentVersion>$(MicrosoftNETCoreAppPackageVersion)</ComponentVersion>
         <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
         <ComponentFriendlyName>.NET Core SharedFramework</ComponentFriendlyName>
+        <MmVer>3.0</MmVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="2.1SharedFrameworkMsiNupkg">
@@ -258,6 +263,7 @@
         <ComponentVersion>2.1.11</ComponentVersion>
         <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
         <ComponentFriendlyName>.NET Core SharedFramework</ComponentFriendlyName>
+        <MmVer>2.1</MmVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="2.2SharedFrameworkMsiNupkg">
@@ -267,6 +273,7 @@
         <ComponentVersion>2.2.5</ComponentVersion>
         <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
         <ComponentFriendlyName>.NET Core SharedFramework</ComponentFriendlyName>
+        <MmVer>2.2</MmVer>
       </SdkMsiComponent>
       
       <SdkMsiComponent Include="SharedHostMsiNupkg">
@@ -276,6 +283,7 @@
         <ComponentVersion>$(SharedHostVersion)</ComponentVersion>
         <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
         <ComponentFriendlyName>.NET Core SharedHost</ComponentFriendlyName>
+        <MmVer>3.0</MmVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="NetStandardTargetingPackMsiNupkg">
@@ -285,6 +293,7 @@
         <ComponentVersion>$(NETStandardLibraryRefPackageVersion)</ComponentVersion>
         <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
         <ComponentFriendlyName>.NET Standard TargetingPack</ComponentFriendlyName>
+        <MmVer>2.1</MmVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="NetCoreTargetingPackMsiNupkg">
@@ -294,6 +303,7 @@
         <ComponentVersion>$(NetCoreAppTargetingPackVersion)</ComponentVersion>
         <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
         <ComponentFriendlyName>.NET Core TargetingPack</ComponentFriendlyName>
+        <MmVer>3.0</MmVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="WindowsDesktopMsiNupkg">
@@ -303,6 +313,7 @@
         <ComponentVersion>$(MicrosoftWindowsDesktopPackageVersion)</ComponentVersion>
         <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
         <ComponentFriendlyName>Windows Desktop</ComponentFriendlyName>
+        <MmVer>3.0</MmVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="WindowsDesktopTargetingPackMsiNupkg">
@@ -312,6 +323,7 @@
         <ComponentVersion>$(WindowsDesktopTargetingPackVersion)</ComponentVersion>
         <ProjectUrlSuffix>dotnet/core-setup</ProjectUrlSuffix>
         <ComponentFriendlyName>Windows Desktop TargetingPack</ComponentFriendlyName>
+        <MmVer>3.0</MmVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="AspNetSharedFrameworkMsiNupkg">
@@ -321,6 +333,7 @@
         <ComponentVersion>$(AspNetCoreVersion)</ComponentVersion>
         <ProjectUrlSuffix>aspnet/aspnetcore</ProjectUrlSuffix>
         <ComponentFriendlyName>Asp.NET SharedFramework</ComponentFriendlyName>
+        <MmVer>3.0</MmVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="2.1AspNetSharedFrameworkMsiNupkg">
@@ -330,6 +343,7 @@
         <ComponentVersion>2.1.11</ComponentVersion>
         <ProjectUrlSuffix>aspnet/aspnetcore</ProjectUrlSuffix>
         <ComponentFriendlyName>Asp.NET SharedFramework</ComponentFriendlyName>
+        <MmVer>2.1</MmVer>
       </SdkMsiComponent>
 
       <SdkMsiComponent Include="2.2AspNetSharedFrameworkMsiNupkg">
@@ -339,6 +353,7 @@
         <ComponentVersion>2.2.5</ComponentVersion>
         <ProjectUrlSuffix>aspnet/aspnetcore</ProjectUrlSuffix>
         <ComponentFriendlyName>Asp.NET SharedFramework</ComponentFriendlyName>
+        <MmVer>2.2</MmVer>
       </SdkMsiComponent>
       
       <SdkMsiComponent Include="ToolsetMsiNupkg">
@@ -348,6 +363,7 @@
         <ComponentVersion>3.0.100-preview7-012323</ComponentVersion>
         <ProjectUrlSuffix>dotnet/core-sdk</ProjectUrlSuffix>
         <ComponentFriendlyName>.NET Core SDK Toolset</ComponentFriendlyName>
+        <MmVer>3.0</MmVer>
       </SdkMsiComponent>
     </ItemGroup>
   </Target>
