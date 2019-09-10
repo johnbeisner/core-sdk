@@ -62,7 +62,8 @@ Resources
     • .NET Core Documentation https://aka.ms/dotnet-docs
     • SDK Documentation https://aka.ms/dotnet-sdk-docs
     • Release Notes https://aka.ms/netcore3releasenotes
-    • Tutorials https://aka.ms/dotnet-tutorials</String>
+    • Tutorials https://aka.ms/dotnet-tutorials
+    • Getting Started https://aka.ms/gettingstarteddotnet</String>
   <String Id="WelcomeHeaderMessage">.NET Core SDK</String>
   <String Id="WelcomeDescription">
     .NET Core is open source, cross-platform and supported by Microsoft. You can use it to build your next app, with C#, F# or VB. We hope you enjoy it!</String>
